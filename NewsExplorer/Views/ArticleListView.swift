@@ -24,6 +24,9 @@ struct ArticleListView: View {
                     articles
                 }
             }
+            .navigationBarTitle("Tech Crunch")
+            .navigationBarTitleDisplayMode(.inline)
+            .navigationBarItems(trailing: sortButton)
             .onAppear {
                 Task {
                     await viewModel.getArticles()
@@ -44,7 +47,7 @@ struct ArticleListView: View {
     
     var articles: some View {
         ScrollView {
-            ForEach(viewModel.articles) { article in
+            ForEach(viewModel.sortArticlesForParam(viewModel.sortedParam)) { article in
                 HStack {
                     VStack(alignment: .leading, spacing: 5) {
                         Text(article.title)
@@ -72,7 +75,16 @@ struct ArticleListView: View {
                         .stroke(Color.gray.opacity(0.25)))
             }
         }
+        .padding(.top, 10)
         .padding(.horizontal, 10)
+    }
+    
+    private var sortButton: some View {
+        Button(action: {
+            viewModel.sortArticles()
+        }, label: {
+            Text(viewModel.isDescriptionSorted ? SortedParam.description.rawValue : SortedParam.title.rawValue)
+        })
     }
 }
 
