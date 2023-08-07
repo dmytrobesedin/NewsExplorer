@@ -15,6 +15,7 @@ final class ArticleViewModel: ObservableObject {
     
     // MARK: - Properties
     var article: Article
+    @Published var query: String = ""
     @Published var isLoading = false
     @Published var articleImage = Image(systemName: Constants.questionMarkSquare)
     @Published var showAlert = false

@@ -50,6 +50,7 @@ struct ArticleView: View {
                 dismissButton: .default(Text("OK"))
             )
         })
+        .searchable(text: $viewModel.query, prompt: Constants.searchPrompt)
         .padding(.vertical)
         .padding(.horizontal, 20)
         .frame(width: UIScreen.main.bounds.width - 24)
@@ -60,12 +61,12 @@ struct ArticleView: View {
     
     private var bookInfoView: some View {
         VStack(alignment: .leading, spacing: 5) {
-            Text("\(viewModel.article.title)")
+            HighlightedTextView(viewModel.article.title, matching: viewModel.query)
                 .font(.system(size: 16, weight: .semibold))
                 .foregroundColor(.black)
             
             VStack(alignment: .leading, spacing: 5) {
-                Text("\(Article.CodingKeys.author.rawValue) - \(viewModel.article.author)")
+                HighlightedTextView("\(Article.CodingKeys.author.rawValue) - \(viewModel.article.author)", matching: viewModel.query)
                     .fixedSize(horizontal: false, vertical: true)
                     .font(.system(size: 14, weight: .regular))
                     .foregroundColor(.black)
@@ -75,12 +76,12 @@ struct ArticleView: View {
                     .font(.system(size: 14, weight: .regular))
                     .foregroundColor(.black)
                 
-                Text("\(Article.CodingKeys.source.rawValue) - \(viewModel.article.source.name)")
+                HighlightedTextView("\(Article.CodingKeys.source.rawValue) - \(viewModel.article.source.name)", matching: viewModel.query)
                     .font(.system(size: 14, weight: .regular))
                     .foregroundColor(.black)
             }
             
-            Text("\(Article.CodingKeys.description.rawValue) - \(viewModel.article.description)")
+            HighlightedTextView("\(Article.CodingKeys.description.rawValue) - \(viewModel.article.description)", matching: viewModel.query)
                 .font(.system(size: 14, weight: .regular))
                 .foregroundColor(.black)
                 .multilineTextAlignment(.leading)

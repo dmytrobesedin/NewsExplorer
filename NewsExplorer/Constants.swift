@@ -10,4 +10,5 @@ import Foundation
 class Constants {
     static let questionMarkSquare = "questionmark.square"
     static let arrowRight = "arrow.right"
+    static let searchPrompt = "Search something by a word"
 }
