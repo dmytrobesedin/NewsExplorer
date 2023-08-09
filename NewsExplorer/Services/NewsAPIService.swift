@@ -15,8 +15,11 @@ final class NewsAPIService: ObservableObject {
     private let session = URLSession.shared
     
     // MARK: - Methods
-    func fetchArticles(completion: @escaping (Result<[Article], Error>) -> Void)  {
-        let urlString = RequestPathConstants.baseURL + RequestPathConstants.techCrunchArticle + RequestPathConstants.apiKey
+    func fetchArticles(from: Date? = nil,
+                       to: Date? = nil,
+                       completion: @escaping (Result<[Article], Error>) -> Void)  {
+        let urlString = getStringURL(from: from, to: to)
+        
         guard let url = URL(string: urlString) else {
             completion(.failure(NewsAPIError.invalidURL()))
             return
@@ -27,7 +30,7 @@ final class NewsAPIService: ObservableObject {
                 completion(.failure(error))
                 return
             }
-
+            
             guard let data = data else { return }
             let jsonDecoder = JSONDecoder()
             do {
@@ -41,7 +44,8 @@ final class NewsAPIService: ObservableObject {
         dataTask.resume()
     }
     
-    func fetch(articleImageURL: String, completion: @escaping (Result<Image, Error>) -> Void) {
+    func fetch(articleImageURL: String,
+               completion: @escaping (Result<Image, Error>) -> Void) {
         guard let url = URL(string: articleImageURL) else {
             completion(.failure(NewsAPIError.invalidURL()))
             return
@@ -61,5 +65,19 @@ final class NewsAPIService: ObservableObject {
             completion(.success(Image(uiImage: uiImage)))
         }
         dataTask.resume()
+    }
+    
+    // MARK: - Private Methods
+    private  func getStringURL(from: Date?, to: Date?) -> String {
+        guard let fromDate = from, let toDate = to else {
+            let urlString = RequestPathConstants.baseURL + RequestPathConstants.techCrunchDomain + RequestPathConstants.apiKey
+            return urlString
+        }
+        
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "MM-dd-yyyy"
+        
+        return RequestPathConstants.getStringURL(from: dateFormatter.string(from: fromDate),
+                                                 to: dateFormatter.string(from: toDate))
     }
 }

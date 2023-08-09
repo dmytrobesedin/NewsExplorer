@@ -15,6 +15,17 @@ final class ArticleListViewModel: ObservableObject {
     @Published var state: LoadingState = .empty
     @Published var sortedParam: SortedParam = .title
     @Published var isDescriptionSorted: Bool = false
+    @Published var isDateTimeViewShown: Bool = false
+    @Published var fromDate: Date = {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyyy/MM/dd"
+        guard let date = formatter.date(from: "2023/08/03") else {
+            return Date.now
+        }
+        return date
+    }()
+    @Published var toDate = Date.now
+    @Published var query = ""
     
     // MARK: - Private properties
     @ObservedObject private(set) var newsAPIService = NewsAPIService.shared
@@ -23,7 +34,7 @@ final class ArticleListViewModel: ObservableObject {
     func getArticles() async {
         state = .loading
         
-        newsAPIService.fetchArticles { result in
+        newsAPIService.fetchArticles(from: fromDate, to: toDate) { result in
             switch result {
             case .success(let articles):
                 DispatchQueue.main.async { [weak self] in
@@ -36,7 +47,7 @@ final class ArticleListViewModel: ObservableObject {
             case .failure(let error):
                 DispatchQueue.main.async { [weak self] in
                     guard let self else { return }
-                    self.showAlert(title: "Receive articles",
+                    self.showAlert(title: Constants.receiveArticlesTitle,
                                    message: error.localizedDescription)
                     self.state = .empty
                 }
@@ -58,7 +69,7 @@ final class ArticleListViewModel: ObservableObject {
         }
     }
     
-    func sortArticles() {
+    func sortButtonAction() {
         if isDescriptionSorted {
             sortedParam = .title
         } else {

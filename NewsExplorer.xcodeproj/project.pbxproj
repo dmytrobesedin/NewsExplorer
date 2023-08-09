@@ -24,6 +24,8 @@
 		2DAD07722A7D9B3F007A7189 /* ArticleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DAD07712A7D9B3F007A7189 /* ArticleView.swift */; };
 		2DAD07742A7D9BE2007A7189 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DAD07732A7D9BE1007A7189 /* Constants.swift */; };
 		2DAD07762A7DA62E007A7189 /* ArticleViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DAD07752A7DA62E007A7189 /* ArticleViewModel.swift */; };
+		2DF1D5B72A83969D00936117 /* String + Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DF1D5B62A83969D00936117 /* String + Extension.swift */; };
+		2DF1D5B92A83AB2600936117 /* ChooseTimePeriodView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DF1D5B82A83AB2600936117 /* ChooseTimePeriodView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -46,6 +48,8 @@
 		2DAD07712A7D9B3F007A7189 /* ArticleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArticleView.swift; sourceTree = "<group>"; };
 		2DAD07732A7D9BE1007A7189 /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		2DAD07752A7DA62E007A7189 /* ArticleViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArticleViewModel.swift; sourceTree = "<group>"; };
+		2DF1D5B62A83969D00936117 /* String + Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String + Extension.swift"; sourceTree = "<group>"; };
+		2DF1D5B82A83AB2600936117 /* ChooseTimePeriodView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChooseTimePeriodView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -63,6 +67,7 @@
 			isa = PBXGroup;
 			children = (
 				2D8ABB0E2A819C4E005A93E8 /* Text + Extension.swift */,
+				2DF1D5B62A83969D00936117 /* String + Extension.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -86,6 +91,7 @@
 		2DAD074D2A7D5DE3007A7189 /* NewsExplorer */ = {
 			isa = PBXGroup;
 			children = (
+				2DC69EEC2A84578000B2CE39 /* CommonFiles */,
 				2D8ABB0B2A818ED3005A93E8 /* Extensions */,
 				2DAD07682A7D65A6007A7189 /* Views */,
 				2DAD07672A7D659E007A7189 /* ViewModels */,
@@ -95,9 +101,6 @@
 				2DAD07522A7D5DE7007A7189 /* Assets.xcassets */,
 				2DAD07542A7D5DE7007A7189 /* NewsExplorer.entitlements */,
 				2DAD07552A7D5DE7007A7189 /* Preview Content */,
-				2DAD075D2A7D625A007A7189 /* RequestPathConstants.swift */,
-				2DAD07622A7D643B007A7189 /* NewsAPIError.swift */,
-				2DAD07732A7D9BE1007A7189 /* Constants.swift */,
 			);
 			path = NewsExplorer;
 			sourceTree = "<group>";
@@ -122,6 +125,7 @@
 			isa = PBXGroup;
 			children = (
 				2DAD07652A7D6549007A7189 /* NewsAPI.swift */,
+				2DAD07622A7D643B007A7189 /* NewsAPIError.swift */,
 				2DAD076F2A7D6730007A7189 /* LoadingState.swift */,
 				2D4A18D62A803B2200F1D6DF /* SortedParam.swift */,
 			);
@@ -144,8 +148,18 @@
 				2DAD076D2A7D666B007A7189 /* LoadingView.swift */,
 				2DAD07712A7D9B3F007A7189 /* ArticleView.swift */,
 				2D8ABB092A818B60005A93E8 /* HighlightedTextView.swift */,
+				2DF1D5B82A83AB2600936117 /* ChooseTimePeriodView.swift */,
 			);
 			path = Views;
+			sourceTree = "<group>";
+		};
+		2DC69EEC2A84578000B2CE39 /* CommonFiles */ = {
+			isa = PBXGroup;
+			children = (
+				2DAD07732A7D9BE1007A7189 /* Constants.swift */,
+				2DAD075D2A7D625A007A7189 /* RequestPathConstants.swift */,
+			);
+			path = CommonFiles;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -220,7 +234,9 @@
 			files = (
 				2DAD076C2A7D65F9007A7189 /* ArticleListViewModel.swift in Sources */,
 				2DAD07742A7D9BE2007A7189 /* Constants.swift in Sources */,
+				2DF1D5B72A83969D00936117 /* String + Extension.swift in Sources */,
 				2DAD07702A7D6730007A7189 /* LoadingState.swift in Sources */,
+				2DF1D5B92A83AB2600936117 /* ChooseTimePeriodView.swift in Sources */,
 				2DAD076A2A7D65E8007A7189 /* ArticleListView.swift in Sources */,
 				2DAD075E2A7D625A007A7189 /* RequestPathConstants.swift in Sources */,
 				2D8ABB0A2A818B60005A93E8 /* HighlightedTextView.swift in Sources */,

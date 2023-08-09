@@ -24,17 +24,30 @@ struct ArticleListView: View {
                     articles
                 }
             }
-            .navigationBarTitle("Tech Crunch")
+            .navigationBarTitle(Constants.techCrunchTitle)
             .navigationBarTitleDisplayMode(.inline)
-            .navigationBarItems(trailing: sortButton)
+            .navigationBarItems(leading: sortButton, trailing: searchButton)
             .onAppear {
                 Task {
                     await viewModel.getArticles()
                 }
             }
+            .onChange(of: viewModel.isDateTimeViewShown) { newValue in
+                if !newValue {
+                    Task {
+                        await viewModel.getArticles()
+                    }
+                }
+            }
             .navigationDestination(for: Article.self) { article in
                 ArticleView(article: article)
             }
+            .sheet(isPresented: $viewModel.isDateTimeViewShown, content: {
+                ChooseTimePeriodView(isShowDateTimeView: $viewModel.isDateTimeViewShown,
+                                     fromDate: $viewModel.fromDate,
+                                     toDate: $viewModel.toDate)
+                .presentationDetents([.fraction(0.35)])
+            })
             .alert(isPresented: $viewModel.showAlert, content: {
                 Alert(
                     title: Text(viewModel.alertTitle),
@@ -45,7 +58,7 @@ struct ArticleListView: View {
         }
     }
     
-    var articles: some View {
+    private var articles: some View {
         ScrollView {
             ForEach(viewModel.sortArticlesForParam(viewModel.sortedParam)) { article in
                 HStack {
@@ -81,9 +94,17 @@ struct ArticleListView: View {
     
     private var sortButton: some View {
         Button(action: {
-            viewModel.sortArticles()
+            viewModel.sortButtonAction()
         }, label: {
             Text(viewModel.isDescriptionSorted ? SortedParam.description.rawValue : SortedParam.title.rawValue)
+        })
+    }
+    
+    private var searchButton: some View {
+        Button(action: {
+            viewModel.isDateTimeViewShown.toggle()
+        }, label: {
+            Image(systemName: Constants.magnifyingglass)
         })
     }
 }

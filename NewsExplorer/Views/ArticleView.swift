@@ -10,6 +10,7 @@ import SwiftUI
 struct ArticleView: View {
     // MARK: - Properties
     @StateObject var viewModel: ArticleViewModel
+    @Environment(\.presentationMode) var presentationMode
     
     // MARK: - Init
     init(article: Article) {
@@ -17,32 +18,44 @@ struct ArticleView: View {
     }
     
     var body: some View {
-        HStack(alignment: .top, spacing: 5) {
-            if viewModel.isLoading {
-                ProgressView()
-                    .frame(width: viewModel.progressSize,
-                           height: viewModel.progressSize,
-                           alignment: .center)
-                    .padding()
-                    .overlay(
-                        Circle()
-                            .strokeBorder(Color.white,
-                                          lineWidth: 4)
-                    )
-            } else {
-                viewModel.articleImage
-                    .resizable()
-                    .frame(width: viewModel.imageWidth,
-                           height: viewModel.imageHeight,
-                           alignment: .center)
+        ScrollView {
+            VStack(alignment: .leading, spacing: 20) {
+                HighlightedTextView(viewModel.article.title, matching: viewModel.query)
+                    .font(.system(size: 16, weight: .semibold))
+                    .foregroundColor(.black)
+                
+                if viewModel.isLoading {
+                    ProgressView()
+                        .frame(width: viewModel.progressSize,
+                               height: viewModel.progressSize,
+                               alignment: .center)
+                        .padding()
+                        .overlay(
+                            Circle()
+                                .strokeBorder(Color.white,
+                                              lineWidth: 4)
+                        )
+                } else {
+                    viewModel.articleImage
+                        .resizable()
+                        .aspectRatio(contentMode: .fill)
+                        .frame(height: viewModel.imageHeight,
+                               alignment: .center)
+                }
+                
+                articleInfoView
+                
+                Spacer()
             }
-            
-            bookInfoView
-            
         }
+        .navigationBarBackButtonHidden(true)
+        .navigationBarItems(leading: backButton)
         .onAppear {
             viewModel.fetchArticleImage()
         }
+        .searchable(text: $viewModel.query,
+                    placement: .navigationBarDrawer(displayMode: .always),
+                    prompt: Constants.searchPrompt)
         .alert(isPresented: $viewModel.showAlert, content: {
             Alert(
                 title: Text(viewModel.alertTitle),
@@ -50,42 +63,56 @@ struct ArticleView: View {
                 dismissButton: .default(Text("OK"))
             )
         })
-        .searchable(text: $viewModel.query, prompt: Constants.searchPrompt)
         .padding(.vertical)
         .padding(.horizontal, 20)
         .frame(width: UIScreen.main.bounds.width - 24)
-        .overlay(
-            RoundedRectangle(cornerRadius: 10)
-                .stroke(Color.gray.opacity(0.25)))
     }
     
-    private var bookInfoView: some View {
+    private var articleInfoView: some View {
         VStack(alignment: .leading, spacing: 5) {
-            HighlightedTextView(viewModel.article.title, matching: viewModel.query)
-                .font(.system(size: 16, weight: .semibold))
-                .foregroundColor(.black)
-            
             VStack(alignment: .leading, spacing: 5) {
-                HighlightedTextView("\(Article.CodingKeys.author.rawValue) - \(viewModel.article.author)", matching: viewModel.query)
-                    .fixedSize(horizontal: false, vertical: true)
-                    .font(.system(size: 14, weight: .regular))
-                    .foregroundColor(.black)
+                HStack(spacing: 5) {
+                    Image(systemName: Constants.personCircle)
+                    
+                    HighlightedTextView(viewModel.article.author, matching: viewModel.query)
+                        .fixedSize(horizontal: false, vertical: true)
+                        .font(.system(size: 14, weight: .regular))
+                        .foregroundColor(.black)
+                    
+                }
                 
-                Text("\(Article.CodingKeys.publishedAt.rawValue) - \(viewModel.article.publishedAt)")
-                    .fixedSize(horizontal: false, vertical: true)
-                    .font(.system(size: 14, weight: .regular))
-                    .foregroundColor(.black)
+                HStack(spacing: 5) {
+                    Image(systemName: Constants.calendarCircle)
+                    
+                    Text(viewModel.article.publishedAt.convertUTCToDate ?? "")
+                        .fixedSize(horizontal: false, vertical: true)
+                        .font(.system(size: 14, weight: .regular))
+                        .foregroundColor(.black)
+                    
+                }
                 
-                HighlightedTextView("\(Article.CodingKeys.source.rawValue) - \(viewModel.article.source.name)", matching: viewModel.query)
-                    .font(.system(size: 14, weight: .regular))
-                    .foregroundColor(.black)
+                HStack(spacing: 5) {
+                    Image(systemName: Constants.globe)
+                    
+                    HighlightedTextView(viewModel.article.source.name, matching: viewModel.query)
+                        .font(.system(size: 14, weight: .regular))
+                        .foregroundColor(.black)
+                }
             }
             
-            HighlightedTextView("\(Article.CodingKeys.description.rawValue) - \(viewModel.article.description)", matching: viewModel.query)
+            HighlightedTextView(viewModel.article.description, matching: viewModel.query)
                 .font(.system(size: 14, weight: .regular))
                 .foregroundColor(.black)
                 .multilineTextAlignment(.leading)
         }
+    }
+    
+    private var backButton: some View {
+        Button(action: {
+            presentationMode.wrappedValue.dismiss()
+        }, label: {
+            Image(systemName: Constants.chevronLeft)
+        })
     }
 }
 

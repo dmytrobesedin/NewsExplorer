@@ -10,8 +10,7 @@ import SwiftUI
 final class ArticleViewModel: ObservableObject {
     // MARK: - Constants
     let progressSize: CGFloat = 44
-    let imageWidth: CGFloat = 70
-    let imageHeight: CGFloat = 100
+    let imageHeight: CGFloat = 190
     
     // MARK: - Properties
     var article: Article
@@ -43,7 +42,8 @@ final class ArticleViewModel: ObservableObject {
                 DispatchQueue.main.async { [weak self] in
                     guard let self else { return }
                     self.isLoading = false
-                    self.showAlert(title: "Fetch article Image", message: failure.localizedDescription)
+                    self.showAlert(title: Constants.fetchArticlesTitle,
+                                   message: failure.localizedDescription)
                 }
                 
             }
