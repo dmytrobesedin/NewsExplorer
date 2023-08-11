@@ -60,7 +60,7 @@ struct ArticleListView: View {
     
     private var articles: some View {
         ScrollView {
-            ForEach(viewModel.sortArticlesForParam(viewModel.sortedParam)) { article in
+            ForEach(viewModel.sortedArticlesForParam(viewModel.sortedParam)) { article in
                 HStack {
                     VStack(alignment: .leading, spacing: 5) {
                         Text(article.title)

@@ -40,7 +40,7 @@ final class ArticleListViewModel: ObservableObject {
                 DispatchQueue.main.async { [weak self] in
                     guard let self else { return }
                     self.articles = articles
-                    self.articles = self.sortArticlesForParam(self.sortedParam)
+                    self.articles = self.sortedArticlesForParam(self.sortedParam)
                     let hasArticles = self.articles.isEmpty == false
                     self.state = hasArticles ? .content : .empty
                 }
@@ -56,7 +56,7 @@ final class ArticleListViewModel: ObservableObject {
         }
     }
     
-    func sortArticlesForParam(_ param: SortedParam) -> [Article] {
+    func sortedArticlesForParam(_ param: SortedParam) -> [Article] {
         switch param {
         case .title:
             return articles.sorted {
