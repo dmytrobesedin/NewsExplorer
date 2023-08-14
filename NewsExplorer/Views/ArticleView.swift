@@ -38,8 +38,9 @@ struct ArticleView: View {
                 } else {
                     viewModel.articleImage
                         .resizable()
-                        .aspectRatio(contentMode: .fill)
-                        .frame(height: viewModel.imageHeight,
+                        .aspectRatio(contentMode: .fit)
+                        .frame(width: viewModel.imageWidth,
+                               height: viewModel.imageHeight,
                                alignment: .center)
                 }
                 

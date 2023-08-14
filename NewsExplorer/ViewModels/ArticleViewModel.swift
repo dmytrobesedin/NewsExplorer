@@ -11,16 +11,19 @@ final class ArticleViewModel: ObservableObject {
     // MARK: - Constants
     let progressSize: CGFloat = 44
     let imageHeight: CGFloat = 190
+    let imageWidth: CGFloat = 350
     
     // MARK: - Properties
-    var article: Article
     @Published var query: String = ""
     @Published var isLoading = false
     @Published var articleImage = Image(systemName: Constants.questionMarkSquare)
     @Published var showAlert = false
     @Published var alertTitle = ""
     @Published var alertMessage = ""
-    @ObservedObject private var newsAPIService = NewsAPIService.shared
+    
+    // MARK: - Private properties
+    private(set) var article: Article
+    private var newsAPIService = NewsAPIService.shared
     
     // MARK: - Init
     init(article: Article) {
@@ -45,11 +48,11 @@ final class ArticleViewModel: ObservableObject {
                     self.showAlert(title: Constants.fetchArticlesTitle,
                                    message: failure.localizedDescription)
                 }
-                
             }
         }
     }
     
+    // MARK: - Private methods
     private func showAlert(title: String, message: String) {
         alertTitle = title
         alertMessage = message

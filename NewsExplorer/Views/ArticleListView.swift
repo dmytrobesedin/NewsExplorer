@@ -12,7 +12,7 @@ struct ArticleListView: View {
     @StateObject var viewModel = ArticleListViewModel()
     
     var body: some View {
-        NavigationStack {
+        NavigationView {
             ZStack {
                 switch viewModel.state {
                 case .loading:
@@ -28,19 +28,12 @@ struct ArticleListView: View {
             .navigationBarTitleDisplayMode(.inline)
             .navigationBarItems(leading: sortButton, trailing: searchButton)
             .onAppear {
-                Task {
-                    await viewModel.getArticles()
-                }
+                getArticles()
             }
             .onChange(of: viewModel.isDateTimeViewShown) { newValue in
                 if !newValue {
-                    Task {
-                        await viewModel.getArticles()
-                    }
+                    getArticles()
                 }
-            }
-            .navigationDestination(for: Article.self) { article in
-                ArticleView(article: article)
             }
             .sheet(isPresented: $viewModel.isDateTimeViewShown, content: {
                 ChooseTimePeriodView(isShowDateTimeView: $viewModel.isDateTimeViewShown,
@@ -58,38 +51,46 @@ struct ArticleListView: View {
         }
     }
     
+    // MARK: - Private properties
     private var articles: some View {
         ScrollView {
             ForEach(viewModel.sortedArticlesForParam(viewModel.sortedParam)) { article in
-                HStack {
-                    VStack(alignment: .leading, spacing: 5) {
-                        Text(article.title)
-                            .font(.system(size: 16, weight: .semibold))
-                            .foregroundColor(.black)
+                NavigationLink {
+                    ArticleView(article: article)
+                } label: {
+                    HStack {
+                        VStack(alignment: .leading, spacing: 5) {
+                            Text(article.title)
+                                .lineLimit(3)
+                                .multilineTextAlignment(.leading)
+                                .font(.system(size: 16, weight: .semibold))
+                                .foregroundColor(.black)
+                            
+                            Text(article.description)
+                                .multilineTextAlignment(.leading)
+                                .fixedSize(horizontal: false, vertical: true)
+                                .lineSpacing(3)
+                                .lineLimit(5)
+                                .font(.system(size: 14, weight: .regular))
+                                .foregroundColor(.black)
+                        }
                         
-                        Text(article.description)
-                            .multilineTextAlignment(.leading)
-                            .fixedSize(horizontal: false, vertical: true)
-                            .lineSpacing(3)
-                            .font(.system(size: 14, weight: .regular))
-                            .foregroundColor(.black)
-                    }
-                    
-                    Spacer()
-                    
-                    NavigationLink(value: article, label: {
+                        Spacer()
+                        
                         Image(systemName: Constants.arrowRight)
-                            .buttonStyle(.borderless)
-                    })
+                    }
+                    .padding(.all, 10)
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 10)
+                            .stroke(Color.gray.opacity(0.25)))
                 }
-                .padding(.all, 10)
-                .overlay(
-                    RoundedRectangle(cornerRadius: 10)
-                        .stroke(Color.gray.opacity(0.25)))
             }
         }
         .padding(.top, 10)
         .padding(.horizontal, 10)
+        .refreshable {
+            getArticles()
+        }
     }
     
     private var sortButton: some View {
@@ -106,6 +107,13 @@ struct ArticleListView: View {
         }, label: {
             Image(systemName: Constants.magnifyingglass)
         })
+    }
+    
+    // MARK: - Private methods
+    private func getArticles() {
+        Task {
+            await viewModel.getArticles()
+        }
     }
 }
 
