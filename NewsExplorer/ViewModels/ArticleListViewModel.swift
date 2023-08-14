@@ -24,12 +24,9 @@ final class ArticleListViewModel: ObservableObject {
     private(set) var newsAPIService = NewsAPIService.shared
     
     // MARK: - Methods
-    func getArticles() async {
-        DispatchQueue.main.async { [weak self] in
-            guard let self else { return }
-            self.state = .loading
-        }
-    
+    @MainActor func getArticles() async {
+        self.state = .loading
+        
         newsAPIService.fetchArticles(from: fromDate, to: toDate) { result in
             switch result {
             case .success(let articles):
